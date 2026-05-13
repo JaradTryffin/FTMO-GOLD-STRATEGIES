@@ -264,9 +264,10 @@ def run_backtest(df, cfg):
             pnl_pts = 0
             reason  = ''
 
+            slip = cfg.get('SLIPPAGE_POINTS', 0)
             if position['dir'] == 'long':
                 if row['low'] <= position['sl']:
-                    pnl_pts = position['sl'] - position['entry']; closed = True; reason = 'SL'
+                    pnl_pts = (position['sl'] - slip) - position['entry']; closed = True; reason = 'SL'
                 elif row['high'] >= position['tp']:
                     pnl_pts = position['tp'] - position['entry']; closed = True; reason = 'TP'
                 else:
@@ -280,7 +281,7 @@ def run_backtest(df, cfg):
                             position['sl'] = new_sl
             else:
                 if row['high'] >= position['sl']:
-                    pnl_pts = position['entry'] - position['sl']; closed = True; reason = 'SL'
+                    pnl_pts = position['entry'] - (position['sl'] + slip); closed = True; reason = 'SL'
                 elif row['low'] <= position['tp']:
                     pnl_pts = position['entry'] - position['tp']; closed = True; reason = 'TP'
                 else:
@@ -299,8 +300,11 @@ def run_backtest(df, cfg):
                 closed = True; reason = 'SessionEnd'
 
             if closed:
-                pnl_usd  = pnl_pts * (position['lots'] / cfg['LOT_SIZE_UNIT']) * cfg['POINT_VALUE']
-                capital += pnl_usd
+                lot_scalar   = position['lots'] / cfg['LOT_SIZE_UNIT']
+                spread_cost  = cfg.get('SPREAD_POINTS', 0)    * lot_scalar * cfg['POINT_VALUE']
+                commission   = cfg.get('COMMISSION_PER_LOT', 0) * position['lots']
+                pnl_usd      = pnl_pts * lot_scalar * cfg['POINT_VALUE'] - spread_cost - commission
+                capital     += pnl_usd
                 trades.append({
                     'entry_time'  : position['entry_time'],
                     'exit_time'   : df.index[i],
@@ -335,13 +339,13 @@ def run_backtest(df, cfg):
                 direction = None
 
                 if ob['dir'] == 'bull' and row['bull_bias']:
-                    if row['low'] <= ob['ob_high'] and row['close'] >= ob['ob_low']:
+                    if row['low'] <= ob['ob_high']:
                         entry     = ob['ob_high']
                         sl        = ob['wick_low'] - row['atr'] * cfg['SL_BUFFER_MULT']
                         direction = 'long'
 
                 elif ob['dir'] == 'bear' and row['bear_bias']:
-                    if row['high'] >= ob['ob_low'] and row['close'] <= ob['ob_high']:
+                    if row['high'] >= ob['ob_low']:
                         entry     = ob['ob_low']
                         sl        = ob['wick_high'] + row['atr'] * cfg['SL_BUFFER_MULT']
                         direction = 'short'
@@ -352,9 +356,13 @@ def run_backtest(df, cfg):
                         continue
                     tp   = (entry + sl_dist * cfg['RR_RATIO'] if direction == 'long'
                             else entry - sl_dist * cfg['RR_RATIO'])
-                    risk = capital * (cfg['RISK_PCT'] / 100)
-                    lots = max(0.01, round(
-                        risk / (sl_dist * (1 / cfg['LOT_SIZE_UNIT']) * cfg['POINT_VALUE']), 2))
+                    fixed_lot = cfg.get('FIXED_LOT', None)
+                    if fixed_lot:
+                        lots = fixed_lot
+                    else:
+                        risk = capital * (cfg['RISK_PCT'] / 100)
+                        lots = max(0.01, round(
+                            risk / (sl_dist * (1 / cfg['LOT_SIZE_UNIT']) * cfg['POINT_VALUE']), 2))
 
                     position = {
                         'dir'        : direction,
@@ -708,6 +716,9 @@ def print_report(metrics, ftmo, cfg):
     print(f"  Risk:Reward:         1:{cfg['RR_RATIO']}")
     print(f"  HTF Bias EMA:        {cfg['HTF_EMA']}-period")
     print(f"  Session (GMT):       {cfg['SESSION_START']}:00 – {cfg['SESSION_END']}:00")
+    lot_mode = f"FIXED {cfg.get('FIXED_LOT')} lots" if cfg.get('FIXED_LOT') else f"Dynamic ({cfg['RISK_PCT']}% risk)"
+    print(f"  Lot Sizing:          {lot_mode}")
+    print(f"  Spread:              {cfg.get('SPREAD_POINTS', 0)} pts | Slippage: {cfg.get('SLIPPAGE_POINTS', 0)} pts | Commission: ${cfg.get('COMMISSION_PER_LOT', 0)}/lot RT")
 
     print(f"\n{B}  PERFORMANCE{W}")
     print(f"  Total Trades:        {metrics.get('total_trades', 0)}")

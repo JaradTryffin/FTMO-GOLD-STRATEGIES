@@ -1,0 +1,13 @@
+# Backtester
+pandas
+numpy
+matplotlib
+
+# Bot (install on Windows VPS only)
+MetaTrader5
+
+# Bot scheduler
+schedule
+
+# Timezone handling
+pytz
