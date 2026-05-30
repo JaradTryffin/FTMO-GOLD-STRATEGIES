@@ -96,7 +96,7 @@ def _is_at_breakeven(live_pos):
 # ── main reconcile ────────────────────────────────────────────────────────────
 
 def reconcile():
-    log.info("══ Reconcile run ══════════════════════════════")
+    log.info("-- Reconcile run " + "-" * 33)
 
     if not broker.connect(MT5_LOGIN, MT5_PASSWORD, MT5_SERVER):
         log.error("Connection failed — skipping this run")
@@ -250,17 +250,17 @@ def reconcile():
     finally:
         broker.disconnect()
 
-    log.info("══ Reconcile complete ════════════════════════")
+    log.info("-- Reconcile complete " + "-" * 28)
 
 
 # ── entry point ───────────────────────────────────────────────────────────────
 
 def main():
-    log.info("╔══════════════════════════════════════════════╗")
-    log.info(f"║  OB Bot starting — {ACTIVE_INSTRUMENT:<26}║")
-    log.info(f"║  Symbol: {SYMBOL:<37}║")
-    log.info(f"║  Mode:   {'MOCK' if isinstance(broker.__name__ if hasattr(broker,'__name__') else '', str) and 'mock' in str(broker) else 'LIVE MT5':<37}║")
-    log.info("╚══════════════════════════════════════════════╝")
+    log.info("=" * 50)
+    log.info(f"  OB Bot starting -- {ACTIVE_INSTRUMENT}")
+    log.info(f"  Symbol: {SYMBOL}")
+    log.info(f"  Mode:   {'MOCK' if isinstance(broker.__name__ if hasattr(broker,'__name__') else '', str) and 'mock' in str(broker) else 'LIVE MT5'}")
+    log.info("=" * 50)
 
     reconcile()  # run immediately on start
 
