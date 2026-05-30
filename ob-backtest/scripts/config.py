@@ -31,7 +31,7 @@ INSTRUMENTS = {
         "name"              : "Gold (XAU/USD)",
         "slug"              : "xauusd",
         "DATA_FILE"         : "../data/xauusd_1h.csv",
-        "MT5_SYMBOL"        : "XAUUSD",    # verify exact name in your MT5 terminal
+        "MT5_SYMBOL"        : "XAUUSDm",   # Exness symbol name
         "MT5_TIMEFRAME"     : "H1",
         "BARS_TO_FETCH"     : 200,
 
@@ -79,7 +79,7 @@ INSTRUMENTS = {
         "name"              : "Gold 2022–2026 (XAU/USD)",
         "slug"              : "xauusd_2022",
         "DATA_FILE"         : "../data/XAUUSD_H1_2022_2026.csv",
-        "MT5_SYMBOL"        : "XAUUSD",    # verify exact name in your MT5 terminal
+        "MT5_SYMBOL"        : "XAUUSDm",   # Exness symbol name
         "MT5_TIMEFRAME"     : "H1",
         "BARS_TO_FETCH"     : 200,
 

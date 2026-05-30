@@ -46,7 +46,12 @@ args, _ = parser.parse_known_args()
 
 if args.mock:
     import broker_mock as broker
-    log.info("Running in MOCK mode (no real MT5 connection)")
+    from config import INSTRUMENTS, ACTIVE_INSTRUMENT as _AI
+    import os as _os
+    _cfg      = INSTRUMENTS[_AI]
+    _data_abs = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), _cfg['DATA_FILE']))
+    broker.set_data_file(_data_abs)
+    log.info(f"Running in MOCK mode — data: {_data_abs}")
 else:
     try:
         import broker_mt5 as broker
