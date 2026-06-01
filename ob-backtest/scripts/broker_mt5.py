@@ -186,7 +186,7 @@ def modify_sl(ticket, new_sl, symbol):
     if result.retcode != mt5.TRADE_RETCODE_DONE:
         log.error(f"modify_sl failed: ticket={ticket} retcode={result.retcode}")
         return False
-    log.info(f"SL modified: ticket={ticket} → {new_sl:.2f}")
+    log.info(f"SL modified: ticket={ticket} -> {new_sl:.2f}")
     return True
 
 

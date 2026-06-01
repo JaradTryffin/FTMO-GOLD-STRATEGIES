@@ -55,7 +55,7 @@ INSTRUMENTS = {
         "HTF_EMA"           : 50,
 
         "SESSION_START"     : 7,
-        "SESSION_END"       : 18,
+        "SESSION_END"       : 21,
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,
@@ -103,7 +103,7 @@ INSTRUMENTS = {
         "HTF_EMA"           : 50,
 
         "SESSION_START"     : 7,
-        "SESSION_END"       : 18,
+        "SESSION_END"       : 21,
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,

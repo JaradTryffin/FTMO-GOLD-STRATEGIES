@@ -69,7 +69,7 @@ try:
     from bot_credentials import MT5_LOGIN, MT5_PASSWORD, MT5_SERVER
 except ImportError:
     log.error("bot_credentials.py not found. "
-              "Copy bot_credentials_template.py → bot_credentials.py and fill in details.")
+              "Copy bot_credentials_template.py -> bot_credentials.py and fill in details.")
     sys.exit(1)
 
 CONFIG = INSTRUMENTS[ACTIVE_INSTRUMENT]
@@ -163,12 +163,12 @@ def reconcile():
             elif state['be_triggered'] and pos_for_state and not pos_for_state['be']:
                 new_sl = (live_pos['entry'] + 0.5 if live_pos['dir'] == 'long'
                           else live_pos['entry'] - 0.5)
-                log.info(f"Breakeven triggered → SL {live_pos['sl']:.2f} → {new_sl:.2f}")
+                log.info(f"Breakeven triggered -> SL {live_pos['sl']:.2f} -> {new_sl:.2f}")
                 broker.modify_sl(live_pos['ticket'], new_sl, SYMBOL)
 
             elif state['new_trailing_sl'] is not None:
-                log.info(f"Trailing stop → SL {live_pos['sl']:.2f} "
-                         f"→ {state['new_trailing_sl']:.2f}")
+                log.info(f"Trailing stop -> SL {live_pos['sl']:.2f} "
+                         f"-> {state['new_trailing_sl']:.2f}")
                 broker.modify_sl(live_pos['ticket'], state['new_trailing_sl'], SYMBOL)
 
         # ── 6. Sync pending orders ────────────────────────────────────────────
