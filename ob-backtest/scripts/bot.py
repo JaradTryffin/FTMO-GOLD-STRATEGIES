@@ -161,8 +161,9 @@ def reconcile():
                 broker.close_position(live_pos['ticket'], SYMBOL, live_pos['volume'])
 
             elif state['be_triggered'] and pos_for_state and not pos_for_state['be']:
-                new_sl = (live_pos['entry'] + 0.5 if live_pos['dir'] == 'long'
-                          else live_pos['entry'] - 0.5)
+                # Long SL must be below entry; short SL must be above entry
+                new_sl = (live_pos['entry'] - 0.5 if live_pos['dir'] == 'long'
+                          else live_pos['entry'] + 0.5)
                 log.info(f"Breakeven triggered -> SL {live_pos['sl']:.2f} -> {new_sl:.2f}")
                 broker.modify_sl(live_pos['ticket'], new_sl, SYMBOL)
 
