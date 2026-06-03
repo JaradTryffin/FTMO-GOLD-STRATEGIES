@@ -87,7 +87,7 @@ def get_account_info():
 # ── Orders & positions ────────────────────────────────────────────────────────
 
 def get_pending_orders(symbol):
-    return list(_orders.values())
+    return [o for o in _orders.values() if o['symbol'] == symbol]
 
 
 def get_open_position(symbol):
@@ -106,6 +106,7 @@ def place_limit_order(symbol, direction, price, sl, tp, lots, comment=''):
     _next_ticket += 1
     _orders[ticket] = {
         'ticket' : ticket,
+        'symbol' : symbol,
         'type'   : 'buy_limit' if direction == 'long' else 'sell_limit',
         'price'  : price,
         'sl'     : sl,

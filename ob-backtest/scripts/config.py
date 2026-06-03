@@ -6,7 +6,8 @@
 #  Available: "XAUUSD"  |  "XAUUSD_2022"  |  "BTCUSD"  |  "USTEC"
 # ══════════════════════════════════════════════════════════════════════════════
 
-ACTIVE_INSTRUMENT = "XAUUSD_2022"   # ← change this, then run backtest.py or bot.py
+ACTIVE_INSTRUMENT  = "XAUUSD_2022"   # ← for backtest scripts (single instrument)
+ACTIVE_INSTRUMENTS = ["XAUUSD_2022", "USTEC"]  # ← for live bot (multi-instrument)
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Per-instrument settings
@@ -175,7 +176,7 @@ INSTRUMENTS = {
         "name"              : "NASDAQ 100 (USTEC)",
         "slug"              : "ustec",
         "DATA_FILE"         : "../data/ustec_data.csv",
-        "MT5_SYMBOL"        : "USTEC",     # may be "NAS100" or "US100" depending on broker
+        "MT5_SYMBOL"        : "USTECm",    # Exness symbol name
         "MT5_TIMEFRAME"     : "H1",
         "BARS_TO_FETCH"     : 200,
 
@@ -185,7 +186,7 @@ INSTRUMENTS = {
         "POINT_VALUE"       : 1.0,
         "SPREAD_POINTS"     : 1.0,         # NAS100 ~1 point spread
         "SLIPPAGE_POINTS"   : 0.5,
-        "COMMISSION_PER_LOT": 5.0,
+        "COMMISSION_PER_LOT": 0.0,         # Exness indices are spread-based
         "FIXED_LOT"         : 1.0,
 
         "SWING_LOOKBACK"    : 5,
@@ -198,8 +199,8 @@ INSTRUMENTS = {
         "SL_BUFFER_MULT"    : 0.15,
         "HTF_EMA"           : 50,
 
-        "SESSION_START"     : 9,
-        "SESSION_END"       : 16,
+        "SESSION_START"     : 7,
+        "SESSION_END"       : 21,          # full London + NY session
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,
