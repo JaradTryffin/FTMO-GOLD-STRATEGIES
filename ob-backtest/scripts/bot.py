@@ -148,9 +148,10 @@ def _reconcile_instrument(cfg, acct):
             broker.close_position(live_pos['ticket'], symbol, live_pos['volume'])
 
         elif state['be_triggered'] and pos_for_state and not pos_for_state['be']:
-            # Long SL must be below entry; short SL must be above entry
-            new_sl = (live_pos['entry'] - 0.5 if live_pos['dir'] == 'long'
-                      else live_pos['entry'] + 0.5)
+            # SL moves to just beyond entry; buffer clears broker min stop distance
+            buf    = cfg.get('BE_SL_BUFFER', 5.0)
+            new_sl = (live_pos['entry'] - buf if live_pos['dir'] == 'long'
+                      else live_pos['entry'] + buf)
             log.info(f"  [{symbol}] Breakeven triggered -> SL {live_pos['sl']:.2f} -> {new_sl:.2f}")
             broker.modify_sl(live_pos['ticket'], new_sl, symbol)
 

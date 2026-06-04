@@ -60,6 +60,7 @@ INSTRUMENTS = {
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,
+        "BE_SL_BUFFER"      : 5.0,         # points from entry when moving to BE
         "TRAILING_AFTER_BE" : True,
         "TRAILING_ATR_MULT" : 1.5,
 
@@ -108,6 +109,7 @@ INSTRUMENTS = {
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,
+        "BE_SL_BUFFER"      : 5.0,
         "TRAILING_AFTER_BE" : True,
         "TRAILING_ATR_MULT" : 1.5,
 
@@ -204,6 +206,7 @@ INSTRUMENTS = {
 
         "MAX_TRADES_DAY"    : 2,
         "BREAKEVEN_AT_1R"   : True,
+        "BE_SL_BUFFER"      : 10.0,        # USTEC needs wider buffer
         "TRAILING_AFTER_BE" : True,
         "TRAILING_ATR_MULT" : 1.5,
 
