@@ -76,10 +76,11 @@ def calc_lots(balance, sl_dist, cfg):
     return max(cfg['LOT_SIZE_UNIT'], round(lots, 2))
 
 
-def _is_at_breakeven(live_pos):
+def _is_at_breakeven(live_pos, cfg):
+    buf = cfg.get('BE_SL_BUFFER', 5.0) + 1.0
     if live_pos['dir'] == 'long':
-        return live_pos['sl'] >= live_pos['entry'] - 1.0
-    return live_pos['sl'] <= live_pos['entry'] + 1.0
+        return live_pos['sl'] >= live_pos['entry'] - buf
+    return live_pos['sl'] <= live_pos['entry'] + buf
 
 
 # ── per-instrument reconcile ──────────────────────────────────────────────────
@@ -132,7 +133,7 @@ def _reconcile_instrument(cfg, acct):
             'sl'     : live_pos['sl'],
             'tp'     : live_pos['tp'],
             'sl_dist': abs(live_pos['entry'] - live_pos['sl']),
-            'be'     : _is_at_breakeven(live_pos),
+            'be'     : _is_at_breakeven(live_pos, cfg),
         }
 
     state = compute_live_state(df, cfg, live_position=pos_for_state)

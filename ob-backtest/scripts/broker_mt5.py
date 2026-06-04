@@ -157,11 +157,28 @@ def place_limit_order(symbol, direction, price, sl, tp, lots, comment=''):
     return result.order
 
 
+def _clamp_sl_to_min_dist(symbol, new_sl, position_type):
+    """Adjust new_sl to respect broker minimum stop distance from current price."""
+    info = mt5.symbol_info(symbol)
+    tick = mt5.symbol_info_tick(symbol)
+    if info is None or tick is None:
+        return new_sl
+    min_dist = info.trade_stops_level * info.point
+    if min_dist == 0:
+        min_dist = (tick.ask - tick.bid) * 2  # fallback: 2x spread
+    min_dist += info.point  # one extra tick safety margin
+    if position_type == mt5.POSITION_TYPE_BUY:
+        return min(new_sl, tick.bid - min_dist)
+    else:
+        return max(new_sl, tick.ask + min_dist)
+
+
 def modify_sl(ticket, new_sl, symbol):
     """Modify SL on either a pending order or an open position."""
     positions = mt5.positions_get(ticket=ticket)
     if positions:
         p = positions[0]
+        new_sl = _clamp_sl_to_min_dist(symbol, new_sl, p.type)
         request = {
             'action'  : mt5.TRADE_ACTION_SLTP,
             'position': ticket,
